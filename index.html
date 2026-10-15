@@ -1,0 +1,1138 @@
+<!doctype html>
+<!-- ============================================================
+  BORONIA ARTS — Drawing & Painting classes for kids (ages 4–14)
+  Single-file website: HTML + CSS + JS all in this one file.
+  No frameworks, no build tools, no extra files needed.
+
+  ✏️ HOW TO EDIT: search this file for "EDIT" — every spot you
+  may want to change is marked with a comment like this one.
+  Full instructions: see DEPLOYMENT_GUIDE.md
+============================================================= -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boronia Arts — Drawing &amp; Painting Classes for Kids (Ages 4–14)</title>
+<meta name="description" content="Boronia Arts is a friendly drawing & painting studio for children aged 4–14. Small batches, all materials included, and a free trial class. Book today.">
+
+<!-- Favicon: a little paint palette (no extra file needed) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 6c14 0 26 10.5 26 24 0 8.5-6.5 12-13 12h-4c-3.4 0-6 2.6-6 6 0 1.4.5 2.6 1.2 3.7.8 1.2 1.8 2.3 1.8 3.8 0 1.9-1.7 2.5-6 2.5C17.4 58 6 46.6 6 32S18 6 32 6z' fill='%2333272A'/%3E%3Ccircle cx='22' cy='22' r='4' fill='%23EF476F'/%3E%3Ccircle cx='36' cy='17' r='4' fill='%23FFC43D'/%3E%3Ccircle cx='47' cy='26' r='4' fill='%233FA66A'/%3E%3Ccircle cx='20' cy='36' r='4' fill='%234D96FF'/%3E%3C/svg%3E">
+
+<!-- Fonts (loaded from Google Fonts — needs internet, has safe fallbacks) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+
+<!-- =======================================================
+  After your site is live, replace the Google-preview lines
+  below with your real link (see DEPLOYMENT_GUIDE.md, Step 8).
+<meta property="og:title" content="Boronia Arts — Art classes for kids">
+<meta property="og:description" content="Drawing & painting classes for children aged 4–14. Free trial class.">
+<meta property="og:url" content="https://YOUR-USERNAME.github.io/boronia-arts/">
+======================================================= -->
+
+<style>
+/* ============================================================
+   BORONIA ARTS — design tokens
+   The six "paint box" colours + paper + ink. Change a colour
+   here and it updates everywhere on the page.
+============================================================ */
+:root{
+  --paper:   #FDF6EC;   /* sketchbook paper */
+  --paper-2: #F5EADA;   /* kraft paper (tinted sections) */
+  --card:    #FFFFFF;
+  --ink:     #33272A;   /* soft plum-black crayon */
+  --ink-60:  rgba(51,39,42,.62);
+  --ink-10:  rgba(51,39,42,.10);
+
+  --red:     #EF476F;   /* raspberry red */
+  --yellow:  #FFC43D;   /* sun yellow */
+  --green:   #3FA66A;   /* leaf green */
+  --blue:    #4D96FF;   /* sky blue */
+  --violet:  #7C5CBF;   /* violet */
+  --teal:    #2EC4B6;   /* peacock teal */
+
+  --radius:  18px;
+  --border:  2.5px solid var(--ink);
+  --shadow-sticker: 5px 5px 0 var(--ink);
+  --shadow-card:    7px 7px 0 rgba(51,39,42,.10);
+  --font-display: "Fredoka", "Comic Sans MS", sans-serif;
+  --font-body: "Nunito", "Segoe UI", sans-serif;
+  --font-hand: "Caveat", "Segoe Script", cursive;
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  font-family:var(--font-body);
+  font-size:17px; line-height:1.65;
+  color:var(--ink);
+  background:var(--paper);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img,svg{ display:block; max-width:100%; }
+a{ color:var(--blue); }
+h1,h2,h3{ font-family:var(--font-display); line-height:1.12; margin:0; }
+p{ margin:0; }
+button{ font-family:inherit; }
+
+:focus-visible{ outline:3px solid var(--blue); outline-offset:3px; border-radius:4px; }
+
+.skip-link{
+  position:absolute; left:-999px; top:8px; z-index:200;
+  background:var(--ink); color:var(--paper);
+  padding:10px 18px; border-radius:10px; font-weight:800;
+}
+.skip-link:focus{ left:12px; }
+
+.container{ width:min(1140px, 92%); margin-inline:auto; }
+.section{ padding:88px 0; position:relative; }
+.section--tint{
+  background:var(--paper-2);
+  background-image:radial-gradient(rgba(51,39,42,.07) 1.2px, transparent 1.2px);
+  background-size:22px 22px;
+}
+
+/* ---------- section headers ---------- */
+.eyebrow{
+  display:inline-flex; align-items:center; gap:10px;
+  font-weight:800; font-size:.82rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-60); margin-bottom:14px;
+}
+.eyebrow::before{ content:""; width:26px; height:10px; border-radius:99px;
+  background:linear-gradient(90deg,var(--red) 0 33%,var(--yellow) 33% 66%,var(--teal) 66% 100%); }
+.section-title{ font-size:clamp(1.9rem, 3.6vw, 2.7rem); font-weight:600; letter-spacing:-.3px; }
+.section-head{ max-width:640px; margin-bottom:48px; }
+.section-head p{ margin-top:14px; color:var(--ink-60); font-size:1.06rem; }
+
+/* ---------- sticker buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  font-family:var(--font-display); font-weight:600; font-size:1.02rem;
+  padding:14px 26px; border-radius:999px; border:var(--border);
+  cursor:pointer; text-decoration:none; color:var(--ink);
+  background:var(--card); box-shadow:var(--shadow-sticker);
+  transition:transform .15s ease, box-shadow .15s ease;
+  user-select:none;
+}
+.btn:hover{ transform:translate(-2px,-2px); box-shadow:7px 7px 0 var(--ink); }
+.btn:active{ transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink); }
+.btn--red{ background:var(--red); color:#fff; }
+.btn--yellow{ background:var(--yellow); }
+.btn--ghost{ box-shadow:4px 4px 0 rgba(51,39,42,.25); }
+.btn--small{ padding:9px 18px; font-size:.92rem; box-shadow:4px 4px 0 var(--ink); }
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky; top:0; z-index:100;
+  background:rgba(253,246,236,.94);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  border-bottom:2px solid var(--ink-10);
+}
+.nav__inner{ display:flex; align-items:center; gap:20px; height:74px; }
+.brand{ display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--ink); }
+.brand svg{ width:38px; height:38px; flex:none; }
+.brand__name{ font-family:var(--font-display); font-weight:600; font-size:1.34rem; letter-spacing:-.2px; }
+.brand__name b{ color:var(--red); font-weight:700; }
+.nav__links{ display:flex; align-items:center; gap:6px; margin-left:auto; }
+.nav__links a{
+  text-decoration:none; color:var(--ink); font-weight:800; font-size:.95rem;
+  padding:9px 13px; border-radius:12px; transition:background .15s;
+}
+.nav__links a:hover{ background:rgba(51,39,42,.07); }
+.nav__links a.is-active{ background:var(--yellow); }
+.nav__cta{ margin-left:10px; }
+.nav__burger{
+  display:none; margin-left:auto;
+  width:46px; height:46px; border:var(--border); border-radius:12px;
+  background:var(--card); cursor:pointer; box-shadow:3px 3px 0 var(--ink);
+}
+.nav__burger span{ display:block; width:20px; height:2.6px; background:var(--ink); margin:4px auto; border-radius:2px; transition:transform .2s; }
+.nav__burger[aria-expanded="true"] span:nth-child(1){ transform:translateY(6.6px) rotate(45deg); }
+.nav__burger[aria-expanded="true"] span:nth-child(2){ opacity:0; }
+.nav__burger[aria-expanded="true"] span:nth-child(3){ transform:translateY(-6.6px) rotate(-45deg); }
+
+/* ---------- hero ---------- */
+.hero{ padding:72px 0 96px; overflow:hidden; }
+.hero__grid{ display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center; }
+.hero__badge{
+  display:inline-flex; align-items:center; gap:9px;
+  background:var(--card); border:2px solid var(--ink); border-radius:999px;
+  padding:7px 16px; font-weight:800; font-size:.86rem;
+  box-shadow:3px 3px 0 var(--ink); margin-bottom:26px;
+}
+.hero__badge .dot{ width:9px; height:9px; border-radius:50%; background:var(--red); animation:pulse 1.8s infinite; }
+@keyframes pulse{ 50%{ transform:scale(1.5); opacity:.5; } }
+.hero h1{ font-size:clamp(2.5rem, 5.2vw, 4rem); font-weight:600; letter-spacing:-1px; }
+.scribble{ position:relative; white-space:nowrap; }
+.scribble svg{ position:absolute; left:0; right:0; bottom:-14px; width:100%; height:16px; }
+.scribble path{ fill:none; stroke:var(--yellow); stroke-width:7; stroke-linecap:round; }
+.hero__sub{ margin:26px 0 30px; font-size:1.14rem; color:var(--ink-60); max-width:33rem; }
+.hero__sub b{ color:var(--ink); }
+.hero__ctas{ display:flex; flex-wrap:wrap; gap:16px; margin-bottom:30px; }
+.hero__chips{ display:flex; flex-wrap:wrap; gap:10px; }
+.chip{
+  display:inline-flex; align-items:center; gap:8px;
+  border:2px solid var(--ink); border-radius:999px; background:var(--card);
+  padding:6px 14px; font-weight:800; font-size:.84rem;
+}
+.chip svg{ width:15px; height:15px; }
+
+/* the taped-up artwork stack */
+.hero__art{ position:relative; min-height:520px; }
+.blob{ position:absolute; border-radius:50%; filter:blur(42px); opacity:.5; animation:drift 9s ease-in-out infinite alternate; }
+.blob--red{ background:var(--red); width:300px; height:300px; top:-30px; right:-40px; }
+.blob--yellow{ background:var(--yellow); width:260px; height:260px; bottom:10px; left:-50px; animation-delay:-4s; }
+.blob--blue{ background:var(--blue); width:200px; height:200px; top:40%; right:6%; animation-delay:-2s; opacity:.35; }
+@keyframes drift{ from{ transform:translate(0,0) scale(1); } to{ transform:translate(18px,-26px) scale(1.08); } }
+
+.sheet{ position:absolute; background:#fff; padding:14px 14px 18px; border:2px solid rgba(51,39,42,.9);
+  box-shadow:8px 10px 0 rgba(51,39,42,.12); border-radius:6px; }
+.sheet::before{ /* masking tape */
+  content:""; position:absolute; top:-14px; left:50%; transform:translateX(-50%) rotate(-4deg);
+  width:86px; height:26px; background:rgba(255,214,102,.85); border-left:1px dashed rgba(51,39,42,.25); border-right:1px dashed rgba(51,39,42,.25);
+}
+.sheet svg{ width:100%; height:auto; }
+.sheet__cap{ font-family:var(--font-hand); font-weight:600; font-size:1.25rem; text-align:center; margin-top:8px; color:var(--ink-60); }
+.sheet--1{ width:56%; left:0; top:6%; transform:rotate(-4deg); z-index:3; animation:bob 7s ease-in-out infinite alternate; }
+.sheet--2{ width:46%; right:2%; top:0; transform:rotate(3.5deg); z-index:2; animation:bob 8s -3s ease-in-out infinite alternate; }
+.sheet--3{ width:50%; right:8%; bottom:0; transform:rotate(-2deg); z-index:4; animation:bob 9s -5s ease-in-out infinite alternate; }
+@keyframes bob{ from{ translate:0 0; } to{ translate:0 -12px; } }
+
+/* ---------- marquee (washi-tape band) ---------- */
+.marquee{
+  background:var(--yellow); border-top:var(--border); border-bottom:var(--border);
+  overflow:hidden; padding:13px 0;
+}
+.marquee__track{ display:flex; gap:2.4rem; width:max-content; animation:scroll 26s linear infinite; }
+.marquee span{
+  font-family:var(--font-display); font-weight:600; font-size:1.06rem; letter-spacing:.06em;
+  white-space:nowrap; display:inline-flex; align-items:center; gap:2.4rem;
+}
+.marquee i{ font-style:normal; font-size:.8em; }
+@keyframes scroll{ to{ transform:translateX(-50%); } }
+
+/* ---------- highlights ---------- */
+.highlights{ display:grid; grid-template-columns:repeat(4,1fr); gap:22px; }
+.hl{
+  background:var(--card); border:2px solid rgba(51,39,42,.85); border-radius:var(--radius);
+  padding:24px 22px; box-shadow:5px 5px 0 rgba(51,39,42,.10);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.hl:hover{ transform:translate(-3px,-3px); box-shadow:8px 8px 0 rgba(51,39,42,.14); }
+.hl__icon{
+  width:52px; height:52px; border-radius:16px; border:2px solid var(--ink);
+  display:grid; place-items:center; margin-bottom:16px;
+}
+.hl__icon svg{ width:26px; height:26px; }
+.hl h3{ font-size:1.12rem; font-weight:600; margin-bottom:6px; }
+.hl p{ font-size:.94rem; color:var(--ink-60); }
+
+/* ---------- programs ---------- */
+.programs{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; align-items:stretch; }
+.program{
+  position:relative; background:var(--card); border:2px solid rgba(51,39,42,.85);
+  border-radius:22px; padding:30px 28px; box-shadow:6px 6px 0 rgba(51,39,42,.10);
+  display:flex; flex-direction:column; gap:16px;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.program:hover{ transform:translate(-4px,-4px); box-shadow:10px 10px 0 rgba(51,39,42,.14); }
+.program__swatch{ width:58px; height:58px; border-radius:50% 40% 55% 45%/48% 55% 45% 52%; border:2px solid var(--ink); display:grid; place-items:center; }
+.program__swatch svg{ width:28px; height:28px; }
+.program h3{ font-size:1.35rem; font-weight:600; }
+.age-pill{
+  position:absolute; top:24px; right:24px;
+  font-family:var(--font-display); font-weight:600; font-size:.85rem;
+  background:var(--ink); color:var(--paper); padding:5px 13px; border-radius:999px;
+}
+.program ul{ list-style:none; margin:0; padding:0; display:grid; gap:9px; }
+.program li{ display:flex; gap:10px; font-size:.97rem; color:var(--ink-60); font-weight:600; }
+.program li svg{ width:17px; height:17px; flex:none; margin-top:4px; }
+.program__focus{
+  margin-top:auto; border-top:2px dashed rgba(51,39,42,.2); padding-top:14px;
+  font-size:.9rem; color:var(--ink-60);
+}
+.program__focus b{ color:var(--ink); font-weight:800; }
+.program--hot{ background:#FFF6F8; }
+.sticker{
+  position:absolute; top:-16px; left:50%; transform:translateX(-50%) rotate(-3deg);
+  background:var(--red); color:#fff; font-family:var(--font-display); font-weight:600;
+  font-size:.85rem; padding:6px 16px; border-radius:999px; border:2px solid var(--ink);
+  box-shadow:3px 3px 0 var(--ink); white-space:nowrap;
+}
+
+/* ---------- gallery wall ---------- */
+.wall{ display:grid; grid-template-columns:repeat(3,1fr); gap:34px 30px; }
+.frame{
+  background:#fff; padding:14px 14px 10px; margin:0; border:2px solid rgba(51,39,42,.85);
+  border-radius:6px; box-shadow:7px 9px 0 rgba(51,39,42,.12); cursor:zoom-in;
+  transition:transform .2s ease, box-shadow .2s ease; position:relative;
+}
+.frame::before{
+  content:""; position:absolute; top:-13px; left:50%; transform:translateX(-50%) rotate(2deg);
+  width:84px; height:26px; background:rgba(255,214,102,.85);
+  border-left:1px dashed rgba(51,39,42,.25); border-right:1px dashed rgba(51,39,42,.25);
+}
+.frame:nth-child(odd){ transform:rotate(-1.6deg); }
+.frame:nth-child(even){ transform:rotate(1.4deg); }
+.frame:hover{ transform:rotate(0) translateY(-6px); box-shadow:10px 13px 0 rgba(51,39,42,.16); }
+.frame svg{ width:100%; height:auto; border-radius:3px; }
+.frame figcaption{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; padding:8px 2px 4px; }
+.frame .t{ font-family:var(--font-hand); font-weight:700; font-size:1.3rem; color:var(--ink); }
+.frame .m{ font-size:.8rem; font-weight:800; color:var(--ink-60); white-space:nowrap; }
+.wall-note{ margin-top:38px; text-align:center; font-size:.92rem; color:var(--ink-60); }
+.wall-note code{ background:var(--card); border:1.5px solid var(--ink-10); border-radius:6px; padding:2px 7px; font-size:.85em; }
+
+/* lightbox */
+.lightbox{
+  position:fixed; inset:0; z-index:300; display:none; place-items:center;
+  background:rgba(51,39,42,.78); padding:24px; cursor:zoom-out;
+}
+.lightbox.open{ display:grid; }
+.lightbox__inner{ background:#fff; padding:18px 18px 14px; border-radius:8px; max-width:min(620px,92vw); transform:rotate(-1deg); }
+.lightbox__inner svg{ width:100%; height:auto; }
+.lightbox__cap{ font-family:var(--font-hand); font-size:1.5rem; font-weight:700; text-align:center; padding-top:10px; }
+.lightbox__close{
+  position:absolute; top:18px; right:18px; width:48px; height:48px; border-radius:50%;
+  border:2.5px solid var(--paper); background:var(--red); color:#fff; font-size:1.3rem;
+  cursor:pointer; font-weight:800;
+}
+
+/* ---------- about ---------- */
+.about__grid{ display:grid; grid-template-columns:.9fr 1.1fr; gap:56px; align-items:center; }
+.namecard{
+  background:var(--card); border:2px solid rgba(51,39,42,.85); border-radius:8px;
+  padding:18px 18px 12px; box-shadow:8px 10px 0 rgba(51,39,42,.12); transform:rotate(-2deg);
+  position:relative; max-width:380px; margin-inline:auto;
+}
+.namecard::before{
+  content:""; position:absolute; top:-14px; left:50%; transform:translateX(-50%) rotate(-3deg);
+  width:96px; height:28px; background:rgba(255,214,102,.85);
+  border-left:1px dashed rgba(51,39,42,.25); border-right:1px dashed rgba(51,39,42,.25);
+}
+.namecard svg{ width:100%; height:auto; border-radius:4px; }
+.namecard__name{ font-family:var(--font-hand); font-weight:700; font-size:1.7rem; text-align:center; margin-top:10px; }
+.namecard__role{ text-align:center; font-size:.85rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-60); padding-bottom:8px; }
+.about__text p{ margin-bottom:16px; color:var(--ink-60); }
+.about__text p b{ color:var(--ink); }
+.about__list{ list-style:none; padding:0; margin:22px 0 0; display:grid; gap:12px; }
+.about__list li{ display:flex; gap:12px; align-items:flex-start; font-weight:700; }
+.about__list li svg{ width:20px; height:20px; flex:none; margin-top:3px; }
+.stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:54px; }
+.stat{
+  text-align:center; background:var(--card); border:2px solid rgba(51,39,42,.85);
+  border-radius:var(--radius); padding:22px 12px; box-shadow:5px 5px 0 rgba(51,39,42,.10);
+}
+.stat b{ display:block; font-family:var(--font-display); font-weight:700; font-size:1.9rem; }
+.stat span{ font-size:.88rem; font-weight:800; color:var(--ink-60); }
+
+/* ---------- schedule ---------- */
+.table-card{
+  background:var(--card); border:2px solid rgba(51,39,42,.85); border-radius:22px;
+  box-shadow:7px 9px 0 rgba(51,39,42,.12); overflow:hidden;
+}
+.table-wrap{ overflow-x:auto; }
+table{ width:100%; border-collapse:collapse; min-width:640px; }
+th{
+  background:var(--ink); color:var(--paper); font-family:var(--font-display); font-weight:600;
+  text-align:left; padding:16px 22px; font-size:1rem; letter-spacing:.02em;
+}
+td{ padding:16px 22px; border-top:2px solid var(--ink-10); font-weight:700; font-size:.97rem; }
+tbody tr:nth-child(even){ background:var(--paper); }
+.batch-tag{ display:inline-block; padding:4px 12px; border-radius:999px; border:2px solid var(--ink); font-size:.82rem; font-weight:800; }
+.table-note{ padding:16px 22px; background:#FFF8DE; border-top:2px solid var(--ink-10); font-size:.92rem; color:var(--ink-60); font-weight:600; }
+
+/* ---------- testimonials ---------- */
+.notes{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+.note{
+  border-radius:8px; padding:30px 26px 24px; border:2px solid rgba(51,39,42,.85);
+  box-shadow:6px 8px 0 rgba(51,39,42,.12); position:relative;
+  transition:transform .2s ease;
+}
+.note:nth-child(1){ background:#FFF1F3; transform:rotate(-1.6deg); }
+.note:nth-child(2){ background:#FFF8DE; transform:rotate(1.2deg); }
+.note:nth-child(3){ background:#EAF3FF; transform:rotate(-1deg); }
+.note:hover{ transform:rotate(0) translateY(-5px); }
+.note__pin{
+  position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+  width:26px; height:26px; border-radius:50%; background:var(--ink);
+  border:2.5px solid var(--paper); box-shadow:0 3px 5px rgba(51,39,42,.35);
+}
+.note blockquote{ margin:0; font-family:var(--font-hand); font-weight:600; font-size:1.42rem; line-height:1.35; color:var(--ink); }
+.note figcaption{ margin-top:16px; font-size:.9rem; font-weight:800; color:var(--ink-60); }
+
+/* ---------- FAQ ---------- */
+.faq{ max-width:760px; margin-inline:auto; display:grid; gap:14px; }
+.faq details{
+  background:var(--card); border:2px solid rgba(51,39,42,.85); border-radius:16px;
+  box-shadow:4px 5px 0 rgba(51,39,42,.10); overflow:hidden;
+}
+.faq summary{
+  list-style:none; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:16px;
+  padding:18px 22px; font-family:var(--font-display); font-weight:600; font-size:1.06rem;
+}
+.faq summary::-webkit-details-marker{ display:none; }
+.faq summary::after{
+  content:"+"; font-size:1.5rem; font-weight:500; color:var(--red); transition:transform .2s;
+  flex:none; line-height:1;
+}
+.faq details[open] summary::after{ transform:rotate(45deg); }
+.faq details p{ padding:0 22px 20px; color:var(--ink-60); font-weight:600; }
+.faq details p b{ color:var(--ink); }
+
+/* ---------- contact ---------- */
+.contact__grid{ display:grid; grid-template-columns:.85fr 1.15fr; gap:34px; align-items:start; }
+.info-card{
+  background:var(--ink); color:var(--paper); border-radius:22px; padding:34px 30px;
+  box-shadow:8px 10px 0 rgba(51,39,42,.18);
+}
+.info-card h3{ font-size:1.4rem; font-weight:600; margin-bottom:20px; }
+.info-card h3 b{ color:var(--yellow); }
+.info-row{ display:flex; gap:14px; align-items:flex-start; padding:13px 0; border-top:2px dashed rgba(253,246,236,.2); }
+.info-row:first-of-type{ border-top:none; }
+.info-row svg{ width:22px; height:22px; flex:none; margin-top:2px; }
+.info-row b{ display:block; font-size:.8rem; letter-spacing:.12em; text-transform:uppercase; opacity:.65; margin-bottom:3px; }
+.info-row p{ font-weight:700; }
+.form-card{
+  background:var(--card); border:2px solid rgba(51,39,42,.85); border-radius:22px;
+  padding:34px 32px; box-shadow:7px 9px 0 rgba(51,39,42,.12);
+}
+.form-card h3{ font-size:1.4rem; font-weight:600; margin-bottom:6px; }
+.form-card > p{ color:var(--ink-60); font-size:.95rem; font-weight:600; margin-bottom:22px; }
+.form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.field{ display:grid; gap:6px; }
+.field--full{ grid-column:1 / -1; }
+.field label{ font-size:.86rem; font-weight:800; }
+.field input, .field select, .field textarea{
+  font-family:var(--font-body); font-size:.98rem; font-weight:600; color:var(--ink);
+  border:2px solid rgba(51,39,42,.8); border-radius:12px; padding:11px 14px;
+  background:var(--paper); width:100%;
+}
+.field textarea{ resize:vertical; min-height:88px; }
+.field input:focus, .field select:focus, .field textarea:focus{ outline:3px solid var(--yellow); outline-offset:1px; border-color:var(--ink); }
+.form-actions{ display:flex; flex-wrap:wrap; gap:14px; margin-top:22px; align-items:center; }
+.form-note{ font-size:.85rem; color:var(--ink-60); font-weight:600; }
+.js-notice{
+  display:none; margin-top:16px; background:#FFF1F3; border:2px solid var(--red);
+  border-radius:12px; padding:12px 16px; font-size:.92rem; font-weight:700; color:var(--ink);
+}
+.js-notice.show{ display:block; }
+
+/* floating WhatsApp bubble */
+.wa-float{
+  position:fixed; right:22px; bottom:22px; z-index:150;
+  width:60px; height:60px; border-radius:50%; background:#25D366;
+  border:2.5px solid var(--ink); box-shadow:4px 4px 0 rgba(51,39,42,.7);
+  display:grid; place-items:center; transition:transform .15s;
+}
+.wa-float:hover{ transform:translate(-2px,-2px); }
+.wa-float svg{ width:30px; height:30px; }
+.wa-float[hidden]{ display:none; }
+
+/* ---------- footer ---------- */
+.footer{ background:var(--ink); color:var(--paper); padding:56px 0 30px; }
+.footer__grid{ display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:40px; margin-bottom:38px; }
+.footer .brand{ color:var(--paper); }
+.footer .brand__name b{ color:var(--yellow); }
+.footer__tag{ color:rgba(253,246,236,.65); font-weight:600; margin-top:14px; max-width:26rem; }
+.footer h4{ font-family:var(--font-display); font-weight:600; font-size:1.02rem; margin:0 0 14px; color:var(--yellow); }
+.footer ul{ list-style:none; margin:0; padding:0; display:grid; gap:10px; }
+.footer a{ color:var(--paper); text-decoration:none; font-weight:700; opacity:.85; }
+.footer a:hover{ opacity:1; text-decoration:underline; }
+.footer__bottom{ border-top:2px dashed rgba(253,246,236,.2); padding-top:22px; display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; font-size:.88rem; color:rgba(253,246,236,.6); font-weight:600; }
+
+/* ---------- reveal on scroll ---------- */
+/* (scroll-reveal removed on purpose — every section stays visible, reliability first) */
+.reveal:nth-child(2){ transition-delay:.07s; }
+.reveal:nth-child(3){ transition-delay:.14s; }
+.reveal:nth-child(4){ transition-delay:.21s; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 980px){
+  .hero__grid{ grid-template-columns:1fr; gap:48px; }
+  .hero__art{ min-height:440px; max-width:520px; margin-inline:auto; width:100%; }
+  .highlights{ grid-template-columns:repeat(2,1fr); }
+  .programs{ grid-template-columns:1fr; max-width:520px; margin-inline:auto; }
+  .wall{ grid-template-columns:repeat(2,1fr); }
+  .about__grid{ grid-template-columns:1fr; }
+  .stats{ grid-template-columns:repeat(2,1fr); }
+  .notes{ grid-template-columns:1fr; max-width:520px; margin-inline:auto; }
+  .contact__grid{ grid-template-columns:1fr; }
+  .footer__grid{ grid-template-columns:1fr 1fr; }
+}
+@media (max-width: 640px){
+  .section{ padding:64px 0; }
+  .hero{ padding:48px 0 72px; }
+  .wall{ grid-template-columns:1fr; }
+  .highlights{ grid-template-columns:1fr; }
+  .form-grid{ grid-template-columns:1fr; }
+  .footer__grid{ grid-template-columns:1fr; }
+  .stats{ grid-template-columns:repeat(2,1fr); }
+  .nav__burger{ display:block; }
+  .nav__links{
+    display:none; position:absolute; top:76px; left:4%; right:4%;
+    flex-direction:column; align-items:stretch; gap:4px;
+    background:var(--card); border:2px solid var(--ink); border-radius:18px;
+    padding:14px; box-shadow:6px 7px 0 rgba(51,39,42,.2);
+  }
+  .nav__links.open{ display:flex; }
+  .nav__links a{ padding:12px 14px; font-size:1.02rem; }
+  .nav__cta{ margin:6px 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  *,*::before,*::after{ animation:none !important; transition:none !important; }
+  .reveal{ opacity:1; transform:none; }
+}
+</style>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ================= NAVIGATION ================= -->
+<header class="nav">
+  <div class="container nav__inner">
+    <a class="brand" href="#top" aria-label="Boronia Arts — home">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6c14 0 26 10.5 26 24 0 8.5-6.5 12-13 12h-4c-3.4 0-6 2.6-6 6 0 1.4.5 2.6 1.2 3.7.8 1.2 1.8 2.3 1.8 3.8 0 1.9-1.7 2.5-6 2.5C17.4 58 6 46.6 6 32S18 6 32 6z" fill="#33272A"/><circle cx="22" cy="22" r="4" fill="#EF476F"/><circle cx="36" cy="17" r="4" fill="#FFC43D"/><circle cx="47" cy="26" r="4" fill="#3FA66A"/><circle cx="20" cy="36" r="4" fill="#4D96FF"/></svg>
+      <span class="brand__name">Boronia <b>Arts</b></span>
+    </a>
+
+    <button class="nav__burger" aria-expanded="false" aria-controls="navlinks" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav__links" id="navlinks" aria-label="Main">
+      <a href="#classes">Classes</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#about">About</a>
+      <a href="#schedule">Schedule</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+      <a href="#contact" class="btn btn--red btn--small nav__cta">Book a free trial</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="container hero__grid">
+    <div>
+      <span class="hero__badge"><span class="dot"></span> Now enrolling for new batches</span>
+      <h1>Little hands. Big imaginations. <span class="scribble">Real art.<svg viewBox="0 0 240 16" aria-hidden="true" preserveAspectRatio="none"><path d="M4 12 Q 40 4 80 9 T 156 8 T 236 7"/></svg></span></h1>
+      <p class="hero__sub">Boronia Arts is a happy little drawing &amp; painting studio where children aged <b>4–14</b> learn to see, sketch and paint — in <b>small batches</b>, with gentle teachers and <b>all materials provided</b>.</p>
+      <div class="hero__ctas">
+        <a class="btn btn--red" href="#contact">Book a free trial class</a>
+        <a class="btn btn--ghost" href="#classes">Peek at our classes</a>
+      </div>
+      <div class="hero__chips">
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#3FA66A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg> Ages 4–14</span>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#4D96FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg> Batches of 8 or fewer</span>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#EF476F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg> Materials included</span>
+      </div>
+    </div>
+
+    <div class="hero__art" aria-hidden="true">
+      <div class="blob blob--red"></div><div class="blob blob--yellow"></div><div class="blob blob--blue"></div>
+
+      <figure class="sheet sheet--1">
+        <svg viewBox="0 0 320 240">
+          <rect width="320" height="240" fill="#FEFBF3"/>
+          <circle cx="262" cy="52" r="24" fill="#FFC43D" stroke="#33272A" stroke-width="4"/>
+          <g stroke="#33272A" stroke-width="3.5" stroke-linecap="round">
+            <line x1="262" y1="16" x2="262" y2="6"/><line x1="298" y1="52" x2="308" y2="52"/><line x1="286" y1="28" x2="293" y2="21"/><line x1="238" y1="28" x2="231" y2="21"/><line x1="226" y1="52" x2="216" y2="52"/>
+          </g>
+          <path d="M70 130 L125 88 L180 130" fill="none" stroke="#33272A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M82 128 V186 H168 V128 Z" fill="#EF476F" fill-opacity=".8" stroke="#33272A" stroke-width="5" stroke-linejoin="round"/>
+          <rect x="120" y="148" width="28" height="38" fill="#FFC43D" stroke="#33272A" stroke-width="4"/>
+          <rect x="90" y="142" width="20" height="17" fill="#4D96FF" fill-opacity=".65" stroke="#33272A" stroke-width="3.5"/>
+          <rect x="142" y="142" width="18" height="17" fill="#4D96FF" fill-opacity=".65" stroke="#33272A" stroke-width="3.5"/>
+          <path d="M22 200 q 30 -14 60 0 t 60 0 t 60 0 t 60 0 t 60 0" fill="none" stroke="#3FA66A" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <figcaption class="sheet__cap">my house — age 5</figcaption>
+      </figure>
+
+      <figure class="sheet sheet--2">
+        <svg viewBox="0 0 320 240">
+          <rect width="320" height="240" fill="#FEFBF3"/>
+          <g fill="none" stroke-linecap="round">
+            <path d="M60 190 a100 100 0 0 1 200 0" stroke="#EF476F" stroke-width="14"/>
+            <path d="M78 190 a82 82 0 0 1 164 0" stroke="#FFC43D" stroke-width="14"/>
+            <path d="M96 190 a64 64 0 0 1 128 0" stroke="#3FA66A" stroke-width="14"/>
+            <path d="M114 190 a46 46 0 0 1 92 0" stroke="#4D96FF" stroke-width="14"/>
+          </g>
+          <ellipse cx="64" cy="196" rx="34" ry="17" fill="#fff" stroke="#33272A" stroke-width="4"/>
+          <ellipse cx="256" cy="196" rx="34" ry="17" fill="#fff" stroke="#33272A" stroke-width="4"/>
+        </svg>
+        <figcaption class="sheet__cap">rainbow weather!</figcaption>
+      </figure>
+
+      <figure class="sheet sheet--3">
+        <svg viewBox="0 0 320 240">
+          <rect width="320" height="240" fill="#FEFBF3"/>
+          <path d="M234 178 q 44 -4 34 -46" fill="none" stroke="#33272A" stroke-width="6" stroke-linecap="round"/>
+          <ellipse cx="172" cy="176" rx="62" ry="40" fill="#FFC43D" fill-opacity=".8" stroke="#33272A" stroke-width="5"/>
+          <circle cx="122" cy="118" r="52" fill="#FFC43D" fill-opacity=".9" stroke="#33272A" stroke-width="5"/>
+          <path d="M86 82 l-8 -30 30 16" fill="#FFC43D" fill-opacity=".9" stroke="#33272A" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M158 82 l8 -30 -30 16" fill="#FFC43D" fill-opacity=".9" stroke="#33272A" stroke-width="5" stroke-linejoin="round"/>
+          <circle cx="104" cy="112" r="5" fill="#33272A"/><circle cx="140" cy="112" r="5" fill="#33272A"/>
+          <path d="M116 126 l6 8 6 -8" fill="none" stroke="#33272A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <g stroke="#33272A" stroke-width="3" stroke-linecap="round">
+            <line x1="66" y1="116" x2="88" y2="120"/><line x1="66" y1="130" x2="88" y2="128"/>
+            <line x1="156" y1="116" x2="178" y2="120"/><line x1="156" y1="130" x2="178" y2="128"/>
+          </g>
+        </svg>
+        <figcaption class="sheet__cap">my cat, mango</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MARQUEE ================= -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>Drawing <i style="color:#EF476F">✦</i> Painting <i style="color:#33272A">✦</i> Sketching <i style="color:#4D96FF">✦</i> Watercolour <i style="color:#EF476F">✦</i> Oil Pastels <i style="color:#33272A">✦</i> Crayon Art <i style="color:#4D96FF">✦</i> Acrylics <i style="color:#EF476F">✦</i> Collage <i style="color:#33272A">✦</i></span>
+    <span>Drawing <i style="color:#EF476F">✦</i> Painting <i style="color:#33272A">✦</i> Sketching <i style="color:#4D96FF">✦</i> Watercolour <i style="color:#EF476F">✦</i> Oil Pastels <i style="color:#33272A">✦</i> Crayon Art <i style="color:#4D96FF">✦</i> Acrylics <i style="color:#EF476F">✦</i> Collage <i style="color:#33272A">✦</i></span>
+  </div>
+</div>
+
+<!-- ================= HIGHLIGHTS ================= -->
+<section class="section">
+  <div class="container">
+    <div class="highlights">
+      <div class="hl reveal">
+        <div class="hl__icon" style="background:#FFF1F3"><svg viewBox="0 0 24 24" fill="none" stroke="#33272A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 8.5 12 4l3 4.5"/><rect x="8.5" y="8.5" width="7" height="11.5" rx="1.6"/><path d="M8.5 12.5h7"/></svg></div>
+        <h3>Age-wise batches</h3>
+        <p>Three levels by age — 4–6, 7–10 and 11–14 — so every child learns at just the right pace.</p>
+      </div>
+      <div class="hl reveal">
+        <div class="hl__icon" style="background:#EAF3FF"><svg viewBox="0 0 24 24" fill="none" stroke="#33272A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.6 0 2.2-1 2.2-2 0-1.3-1-1.6-1-2.6 0-.8.7-1.4 1.6-1.4H17a4 4 0 0 0 4-4c0-4.5-4-8-9-8Z"/><circle cx="8.5" cy="10" r="1.15"/><circle cx="12" cy="7.5" r="1.15"/><circle cx="15.5" cy="10" r="1.15"/></svg></div>
+        <h3>Paint, paper &amp; fun included</h3>
+        <p>Every paintbrush, canvas and crayon is on us. Parents just bring the young artist.</p>
+      </div>
+      <div class="hl reveal">
+        <div class="hl__icon" style="background:#FFF8DE"><svg viewBox="0 0 24 24" fill="none" stroke="#33272A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8.5 19.5 6M9.5 21 4 21.5 4.5 16 15 5.5a2.1 2.1 0 0 1 3 0l.5.5a2.1 2.1 0 0 1 0 3Z"/></svg></div>
+        <h3>Warm, trained teachers</h3>
+        <p>Art educators who encourage first, correct gently later — and know every child by name.</p>
+      </div>
+      <div class="hl reveal">
+        <div class="hl__icon" style="background:#EDF7EF"><svg viewBox="0 0 24 24" fill="none" stroke="#33272A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.5 5.2 5.7.8-4.1 4 1 5.7-5.1-2.7-5.1 2.7 1-5.7-4.1-4 5.7-.8Z"/></svg></div>
+        <h3>An annual art show</h3>
+        <p>Every child's work framed and exhibited for family and friends — confidence you can see.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROGRAMS ================= -->
+<section class="section" id="classes" style="padding-top:20px">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Our classes</span>
+      <h2 class="section-title">Pick a batch by age — not by skill</h2>
+      <p>Every child starts where they are. We build skill through play, projects and plenty of paint.</p>
+    </div>
+
+    <div class="programs">
+      <article class="program reveal">
+        <div class="program__swatch" style="background:#FFC43D"><svg viewBox="0 0 24 24" fill="none" stroke="#33272A" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3.5 15c2.5-5 4.5 3 7-2s4.5 3 7-2"/><path d="M4 19.5h16"/></svg></div>
+        <h3>Little Doodles</h3>
+        <span class="age-pill">Ages 4–6</span>
+        <ul>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#FFC43D" stroke="#33272A" stroke-width="2"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Scribble-to-shape drawing games</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#FFC43D" stroke="#33272A" stroke-width="2"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Finger painting &amp; crayon play</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#FFC43D" stroke="#33272A" stroke-width="2"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Colour, pattern &amp; story art</li>
+        </ul>
+        <p class="program__focus"><b>Focus:</b> fine motor skills, colour sense and the joy of making a happy mess.</p>
+      </article>
+
+      <article class="program program--hot reveal">
+        <span class="sticker">Most loved</span>
+        <div class="program__swatch" style="background:#4D96FF"><svg viewBox="0 0 24 24" fill="none" stroke="#33272A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 20.5 4 21l.5-5.5L15 5a2.1 2.1 0 0 1 3 0l1 1a2.1 2.1 0 0 1 0 3Z"/></svg></div>
+        <h3>Young Sketchers</h3>
+        <span class="age-pill">Ages 7–10</span>
+        <ul>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#4D96FF" stroke="#33272A" stroke-width="2"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Pencil drawing &amp; observation</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#4D96FF" stroke="#33272A" stroke-width="2"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Watercolour &amp; oil pastels</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#4D96FF" stroke="#33272A" stroke-width="2"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Folk-art &amp; festival projects</li>
+        </ul>
+        <p class="program__focus"><b>Focus:</b> real technique — shading, composition, patience — still wrapped in fun.</p>
+      </article>
+
+      <article class="program reveal">
+        <div class="program__swatch" style="background:#EF476F"><svg viewBox="0 0 24 24" fill="none" stroke="#33272A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5 18.5 9.5 9 19c-1.4 1.4-3.6 1.4-5 0s-1.4-3.6 0-5Z"/><path d="M18.5 9.5 21 7l-4-4-2.5 2.5"/></svg></div>
+        <h3>Creative Masters</h3>
+        <span class="age-pill">Ages 11–14</span>
+        <ul>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#EF476F" stroke="#33272A" stroke-width="2"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Perspective, shading &amp; charcoal</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#EF476F" stroke="#33272A" stroke-width="2"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Acrylic painting on canvas</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#EF476F" stroke="#33272A" stroke-width="2"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Portfolio &amp; exam-board guidance</li>
+        </ul>
+        <p class="program__focus"><b>Focus:</b> personal style and a portfolio — for exams, competitions, or the love of it.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GALLERY WALL ================= -->
+<section class="section section--tint" id="gallery">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">The gallery wall</span>
+      <h2 class="section-title">Straight off our studio wall</h2>
+      <p>A peek at what our young artists make. Click any piece to see it up close.</p>
+    </div>
+
+    <div class="wall">
+      <figure class="frame reveal" data-cap="Flower Pot · Watercolour · Age 8">
+        <svg viewBox="0 0 320 240" role="img" aria-label="Watercolour painting of sunflowers in a blue vase">
+          <rect width="320" height="240" fill="#FDF3E3"/>
+          <g stroke="#33272A" stroke-width="4" stroke-linecap="round">
+            <line x1="150" y1="160" x2="128" y2="92"/><line x1="162" y1="160" x2="164" y2="70"/><line x1="174" y1="160" x2="198" y2="94"/>
+            <path d="M96 96 q-16 -10 -10 -24" fill="none"/><path d="M232 104 q 14 -14 6 -26" fill="none"/>
+          </g>
+          <g><circle cx="128" cy="80" r="17" fill="#FFC43D" stroke="#33272A" stroke-width="3.5"/><circle cx="164" cy="56" r="19" fill="#FFC43D" stroke="#33272A" stroke-width="3.5"/><circle cx="198" cy="82" r="16" fill="#FFC43D" stroke="#33272A" stroke-width="3.5"/>
+          <circle cx="128" cy="80" r="7" fill="#B4713D" stroke="#33272A" stroke-width="3"/><circle cx="164" cy="56" r="8" fill="#B4713D" stroke="#33272A" stroke-width="3"/><circle cx="198" cy="82" r="7" fill="#B4713D" stroke="#33272A" stroke-width="3"/></g>
+          <path d="M140 158 h44 l9 56 h-62 z" fill="#4D96FF" fill-opacity=".7" stroke="#33272A" stroke-width="4" stroke-linejoin="round"/>
+        </svg>
+        <figcaption><span class="t">Flower Pot</span><span class="m">Watercolour · Age 8</span></figcaption>
+      </figure>
+
+      <figure class="frame reveal" data-cap="Trip to the Moon · Crayon · Age 6">
+        <svg viewBox="0 0 320 240" role="img" aria-label="Crayon drawing of a rocket in space">
+          <rect width="320" height="240" fill="#DCEBFF"/>
+          <g fill="#33272A"><circle cx="40" cy="40" r="3"/><circle cx="280" cy="30" r="2.6"/><circle cx="300" cy="120" r="3"/><circle cx="36" cy="150" r="2.6"/><circle cx="90" cy="24" r="2.2"/><circle cx="240" cy="200" r="2.6"/></g>
+          <path d="M160 34 q 36 36 36 88 h-72 q 0 -52 36 -88" fill="#FDF6EC" stroke="#33272A" stroke-width="4.5" stroke-linejoin="round"/>
+          <circle cx="160" cy="96" r="15" fill="#4D96FF" fill-opacity=".75" stroke="#33272A" stroke-width="4"/>
+          <path d="M124 118 l-26 34 30 -8" fill="#EF476F" fill-opacity=".85" stroke="#33272A" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M196 118 l26 34 -30 -8" fill="#EF476F" fill-opacity=".85" stroke="#33272A" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M146 124 q 14 26 28 0 l-6 40 h-16 z" fill="#EF476F" fill-opacity=".85" stroke="#33272A" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M160 168 q -12 22 0 36 q 12 -14 0 -36" fill="#FFC43D" stroke="#33272A" stroke-width="4" stroke-linejoin="round"/>
+          <circle cx="268" cy="70" r="14" fill="#FFC43D" fill-opacity=".6" stroke="#33272A" stroke-width="3"/>
+        </svg>
+        <figcaption><span class="t">Trip to the Moon</span><span class="m">Crayon · Age 6</span></figcaption>
+      </figure>
+
+      <figure class="frame reveal" data-cap="Rainbow Fish · Oil pastel · Age 7">
+        <svg viewBox="0 0 320 240" role="img" aria-label="Oil pastel drawing of a fish underwater">
+          <rect width="320" height="240" fill="#E3F4F2"/>
+          <path d="M28 210 q 10 -60 -8 -100 q 22 8 24 -34 q 14 30 30 12" fill="none" stroke="#3FA66A" stroke-width="5" stroke-linecap="round"/>
+          <path d="M292 214 q -8 -50 10 -88 q -20 6 -24 -30" fill="none" stroke="#3FA66A" stroke-width="5" stroke-linecap="round"/>
+          <ellipse cx="170" cy="130" rx="78" ry="48" fill="#EF476F" fill-opacity=".85" stroke="#33272A" stroke-width="4.5"/>
+          <path d="M244 130 l46 -30 v60 z" fill="#FFC43D" fill-opacity=".9" stroke="#33272A" stroke-width="4.5" stroke-linejoin="round"/>
+          <path d="M150 88 q 20 18 0 40 M186 86 q 20 20 0 44" fill="none" stroke="#33272A" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="128" cy="118" r="7" fill="#fff" stroke="#33272A" stroke-width="3.5"/><circle cx="128" cy="118" r="2.6" fill="#33272A"/>
+          <path d="M100 142 q 10 8 22 2" fill="none" stroke="#33272A" stroke-width="3.5" stroke-linecap="round"/>
+          <g fill="none" stroke="#4D96FF" stroke-width="3.5"><circle cx="70" cy="84" r="7"/><circle cx="56" cy="60" r="5"/><circle cx="42" cy="42" r="3.5"/></g>
+        </svg>
+        <figcaption><span class="t">Rainbow Fish</span><span class="m">Oil pastel · Age 7</span></figcaption>
+      </figure>
+
+      <figure class="frame reveal" data-cap="Butterfly Garden · Watercolour · Age 9">
+        <svg viewBox="0 0 320 240" role="img" aria-label="Watercolour painting of a butterfly">
+          <rect width="320" height="240" fill="#FEFBF3"/>
+          <path d="M160 78 q -34 -44 -70 -22 q -28 20 2 44 q -26 16 0 36 q 30 20 68 -16" fill="#EF476F" fill-opacity=".75" stroke="#33272A" stroke-width="4.5" stroke-linejoin="round"/>
+          <path d="M160 78 q 34 -44 70 -22 q 28 20 -2 44 q 26 16 0 36 q -30 20 -68 -16" fill="#4D96FF" fill-opacity=".7" stroke="#33272A" stroke-width="4.5" stroke-linejoin="round"/>
+          <circle cx="106" cy="84" r="6" fill="#FFC43D" stroke="#33272A" stroke-width="3"/><circle cx="214" cy="84" r="6" fill="#FFC43D" stroke="#33272A" stroke-width="3"/>
+          <circle cx="118" cy="120" r="5" fill="#fff" stroke="#33272A" stroke-width="3"/><circle cx="202" cy="120" r="5" fill="#fff" stroke="#33272A" stroke-width="3"/>
+          <rect x="153" y="70" width="14" height="104" rx="7" fill="#33272A"/>
+          <g stroke="#33272A" stroke-width="3.5" stroke-linecap="round" fill="none"><path d="M156 70 q -10 -18 -22 -22"/><path d="M164 70 q 10 -18 22 -22"/></g>
+          <path d="M20 216 q 30 -12 60 0 t 60 0 t 60 0 t 60 0 t 60 0" fill="none" stroke="#3FA66A" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <figcaption><span class="t">Butterfly Garden</span><span class="m">Watercolour · Age 9</span></figcaption>
+      </figure>
+
+      <figure class="frame reveal" data-cap="Quiet Mountains · Poster colour · Age 10">
+        <svg viewBox="0 0 320 240" role="img" aria-label="Poster colour painting of mountains at sunrise">
+          <rect width="320" height="240" fill="#FFF1F3"/>
+          <circle cx="86" cy="70" r="26" fill="#FFC43D" stroke="#33272A" stroke-width="4"/>
+          <g stroke="#33272A" stroke-width="3.5" stroke-linecap="round" fill="none"><path d="M150 60 q 8 -8 16 0"/><path d="M196 44 q 8 -8 16 0"/></g>
+          <path d="M18 196 L108 66 L198 196 Z" fill="#7C5CBF" fill-opacity=".75" stroke="#33272A" stroke-width="4.5" stroke-linejoin="round"/>
+          <path d="M88 96 L108 66 L128 96 L116 88 L108 98 L100 88 Z" fill="#fff" stroke="#33272A" stroke-width="3.5" stroke-linejoin="round"/>
+          <path d="M150 196 L232 84 L312 196 Z" fill="#2EC4B6" fill-opacity=".7" stroke="#33272A" stroke-width="4.5" stroke-linejoin="round"/>
+          <path d="M216 108 L232 84 L248 108 L240 100 L232 110 L224 100 Z" fill="#fff" stroke="#33272A" stroke-width="3.5" stroke-linejoin="round"/>
+          <path d="M10 196 h300" stroke="#33272A" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+        <figcaption><span class="t">Quiet Mountains</span><span class="m">Poster colour · Age 10</span></figcaption>
+      </figure>
+
+      <figure class="frame reveal" data-cap="Ice-Cream Day · Crayon & paper · Age 6">
+        <svg viewBox="0 0 320 240" role="img" aria-label="Crayon drawing of an ice cream cone">
+          <rect width="320" height="240" fill="#FDF3E3"/>
+          <g stroke="#33272A" stroke-width="4" stroke-linecap="round">
+            <line x1="188" y1="24" x2="188" y2="12"/><line x1="206" y1="32" x2="215" y2="25"/><line x1="170" y1="32" x2="161" y2="25"/>
+          </g>
+          <path d="M128 118 L160 208 L192 118 Z" fill="#E8B26C" stroke="#33272A" stroke-width="4.5" stroke-linejoin="round"/>
+          <g stroke="#33272A" stroke-width="2.6"><line x1="140" y1="146" x2="180" y2="146"/><line x1="147" y1="168" x2="173" y2="168"/></g>
+          <circle cx="160" cy="88" r="34" fill="#F9AEC3" stroke="#33272A" stroke-width="4.5"/>
+          <circle cx="138" cy="104" r="26" fill="#9FE0DC" stroke="#33272A" stroke-width="4.5"/>
+          <circle cx="182" cy="104" r="26" fill="#FFC43D" stroke="#33272A" stroke-width="4.5"/>
+          <circle cx="160" cy="46" r="8" fill="#EF476F" stroke="#33272A" stroke-width="3.5"/>
+        </svg>
+        <figcaption><span class="t">Ice-Cream Day</span><span class="m">Crayon &amp; paper · Age 6</span></figcaption>
+      </figure>
+    </div>
+
+    <p class="wall-note">These are sample pieces so you can preview the design — swap in photos of your students' real artwork before launch <code>(see DEPLOYMENT_GUIDE.md)</code>.</p>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="about__grid">
+      <div class="reveal">
+        <div class="namecard">
+          <!-- ✏️ EDIT: replace this drawing with a real photo of the teacher:
+               <img src="teacher.jpg" alt="..." style="border-radius:4px"> -->
+          <svg viewBox="0 0 320 300" role="img" aria-label="Doodle portrait of the art teacher">
+            <rect width="320" height="300" fill="#FFF8DE"/>
+            <circle cx="160" cy="110" r="58" fill="#F9AEC3" fill-opacity=".6" stroke="#33272A" stroke-width="5"/>
+            <path d="M102 96 q 20 -46 58 -42 q 44 4 56 46 q -18 -20 -58 -18 q -40 2 -56 14" fill="#33272A"/>
+            <circle cx="140" cy="112" r="5.5" fill="#33272A"/><circle cx="180" cy="112" r="5.5" fill="#33272A"/>
+            <path d="M142 138 q 18 14 36 0" fill="none" stroke="#33272A" stroke-width="4.5" stroke-linecap="round"/>
+            <circle cx="126" cy="130" r="7" fill="#EF476F" fill-opacity=".5"/>
+            <path d="M96 178 q 64 -26 128 0 l 12 78 H 84 Z" fill="#7C5CBF" fill-opacity=".55" stroke="#33272A" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M210 196 l 52 -58" stroke="#33272A" stroke-width="7" stroke-linecap="round"/>
+            <path d="M262 138 l 14 -16 8 12 -16 14 z" fill="#4D96FF" stroke="#33272A" stroke-width="3.5" stroke-linejoin="round"/>
+            <path d="M210 196 l -8 16 18 -6" fill="#fff" stroke="#33272A" stroke-width="3.5" stroke-linejoin="round"/>
+          </svg>
+          <div class="namecard__name">✏️ [Priti]</div>
+          <div class="namecard__role">Founder &amp; art teacher</div>
+        </div>
+      </div>
+
+      <div class="about__text reveal">
+        <span class="eyebrow">About the studio</span>
+        <h2 class="section-title" style="margin-bottom:20px">A studio that feels like a friend's living room</h2>
+        <!-- ✏️ EDIT: replace with your real story (2–3 short paragraphs) -->
+        <p><b>✏️ Write your story here.</b> Introduce yourself: your art background, when you started teaching, and why you love teaching children. Parents reading this want to trust you with their child — a warm, honest paragraph works wonders.</p>
+        <p>Boronia Arts classes are deliberately small, so every child gets attention and every idea gets heard. We never grade art against the child next door — we compare each artist only with the artist they were last month.</p>
+        <ul class="about__list">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#3FA66A" stroke="#33272A" stroke-width="2"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> A no-pressure classroom — effort is celebrated, not just results</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#4D96FF" stroke="#33272A" stroke-width="2"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> A new theme every month, from monsoon skies to festival art</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#EF476F" stroke="#33272A" stroke-width="2"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Every artwork goes home, framed or celebrated — never binned</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ✏️ EDIT: replace these sample numbers with your real ones -->
+    <div class="stats">
+      <div class="stat reveal"><b>10</b><span>kids max per batch</span></div>
+      <div class="stat reveal"><b>4–14</b><span>age range</span></div>
+      <div class="stat reveal"><b>30+</b><span>projects every year</span></div>
+      <div class="stat reveal"><b>1</b><span>annual art exhibition</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SCHEDULE & FEES ================= -->
+<section class="section section--tint" id="schedule">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Schedule &amp; fees</span>
+      <h2 class="section-title">Find a batch that fits your week</h2>
+      <p>✏️ The days, times and fees below are placeholders — fill in your real schedule (marked <b>EDIT</b> in the file).</p>
+    </div>
+
+    <div class="table-card reveal">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Batch</th><th>Ages</th><th>Days</th><th>Time</th><th>Monthly fee</th></tr>
+          </thead>
+          <tbody>
+            <!-- ✏️ EDIT: your real days / times / fees -->
+            <tr><td><span class="batch-tag" style="background:#FFF8DE">Little Doodles</span></td><td>4–6</td><td>[Days]</td><td>[Time]</td><td>₹ [fee]</td></tr>
+            <tr><td><span class="batch-tag" style="background:#EAF3FF">Young Sketchers</span></td><td>7–10</td><td>[Days]</td><td>[Time]</td><td>₹ [fee]</td></tr>
+            <tr><td><span class="batch-tag" style="background:#FFF1F3">Creative Masters</span></td><td>11–14</td><td>[Days]</td><td>[Time]</td><td>₹ [fee]</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">All materials are included in every batch. Ask us about sibling discounts and term plans when you book the free trial.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TESTIMONIALS ================= -->
+<!-- ✏️ EDIT: these are SAMPLE quotes. Replace them with real words from
+     real parents (with their permission) before you go live. -->
+<section class="section" id="testimonials">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">From parents</span>
+      <h2 class="section-title">Words from the car park</h2>
+      <p>The truest reviews of an art class are the ones parents swap while waiting for class to end.</p>
+    </div>
+    <div class="notes">
+      <figure class="note reveal"><span class="note__pin"></span>
+        <blockquote>“My daughter used to scribble on the walls. Now she scribbles on paper — beautifully. And she teaches US about shading at dinner.”</blockquote>
+        <figcaption>— [Parent's name], parent of a Young Sketcher</figcaption>
+      </figure>
+      <figure class="note reveal"><span class="note__pin"></span>
+        <blockquote>“Small batches were the deciding factor for us. The teacher knows exactly which child needs a push and which needs a pat.”</blockquote>
+        <figcaption>— [Parent's name], parent of a Little Doodle</figcaption>
+      </figure>
+      <figure class="note reveal"><span class="note__pin"></span>
+        <blockquote>“The annual art show was the first time my son stood a little taller in public. Worth every rupee.”</blockquote>
+        <figcaption>— [Parent's name], parent of a Creative Master</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="section section--tint" id="faq">
+  <div class="container">
+    <div class="section-head" style="margin-inline:auto; text-align:center">
+      <span class="eyebrow" style="justify-content:center">Good questions</span>
+      <h2 class="section-title">Everything parents ask us</h2>
+    </div>
+
+    <div class="faq">
+      <!-- ✏️ EDIT: adjust answers to match how you run the studio -->
+      <details class="reveal">
+        <summary>What ages do you teach?</summary>
+        <p>Children from <b>4 to 14 years</b>, grouped into three batches — Little Doodles (4–6), Young Sketchers (7–10) and Creative Masters (11–14). Every child gets age-right projects, from scribble games to canvas painting.</p>
+      </details>
+      <details class="reveal">
+        <summary>Do we need to bring any materials?</summary>
+        <p>No — <b>all materials are included</b>: paints, brushes, paper, canvas, everything. Just send your child in clothes that are allowed to get a little painty.</p>
+      </details>
+      <details class="reveal">
+        <summary>Can we try a class before joining?</summary>
+        <p>Yes! Every child gets <b>one free trial class</b> — no payment, no forms to sign. Use the form below or message us on WhatsApp to reserve a seat.</p>
+      </details>
+      <details class="reveal">
+        <summary>What are the fees?</summary>
+        <p>✏️ <b>[Add your fee structure — e.g. ₹ — per month, per child, materials included]</b>. Fees are collected monthly; we'll share the details when you book your trial class.</p>
+      </details>
+      <details class="reveal">
+        <summary>Where exactly are you located?</summary>
+        <p>✏️ <b>[Add your full address + a nearby landmark]</b> — see the map pin in the contact section below.</p>
+      </details>
+      <details class="reveal">
+        <summary>What if my child misses a class?</summary>
+        <p>Life happens! We'll help your child catch up in the next session, and ✏️ <b>[add your make-up class policy here]</b>.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Say hello</span>
+      <h2 class="section-title">Book a free trial class</h2>
+      <p>Fill this in and tap the button — it opens WhatsApp (or your email app) with the message ready to send. Nothing is stored online.</p>
+    </div>
+
+    <div class="contact__grid">
+      <div class="info-card reveal">
+        <h3>Come say <b>hi</b> in person</h3>
+        <!-- ✏️ EDIT: your real contact details (all four blocks below) -->
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FFC43D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+          <div><b>Visit the studio</b><p>[Add your street address]<br>[Neighbourhood, City — PIN]</p></div>
+        </div>
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FFC43D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>
+          <div><b>Call / WhatsApp</b><p>[+91 XXXXX XXXXX]</p></div>
+        </div>
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FFC43D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          <div><b>Email</b><p>[hello@yourstudio.com]</p></div>
+        </div>
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FFC43D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+          <div><b>Class hours</b><p>[Add your batch timings]<br>Monday – Saturday</p></div>
+        </div>
+      </div>
+
+      <form class="form-card reveal" id="enquiry" novalidate>
+        <h3>Reserve a seat</h3>
+        <p>We reply within a day, usually sooner.</p>
+        <div class="form-grid">
+          <div class="field"><label for="f-child">Child's name</label><input id="f-child" name="child" required placeholder="e.g. Aarav"></div>
+          <div class="field"><label for="f-age">Child's age</label>
+            <select id="f-age" name="age" required>
+              <option value="" selected disabled>Choose…</option>
+              <option>4–6 years</option><option>7–10 years</option><option>11–14 years</option>
+            </select>
+          </div>
+          <div class="field"><label for="f-parent">Your name</label><input id="f-parent" name="parent" required placeholder="e.g. Kavitha"></div>
+          <div class="field"><label for="f-phone">Your phone</label><input id="f-phone" name="phone" type="tel" required placeholder="e.g. 98765 43210"></div>
+          <div class="field field--full"><label for="f-msg">Anything we should know? <span style="font-weight:600; opacity:.6">(optional)</span></label><textarea id="f-msg" name="msg" placeholder="Interests, allergies, preferred days…"></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn--red" id="wa-send">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.4L3 21l4.7-1.2A9 9 0 1 0 12 3Z"/><path d="M8.7 9.5c.6 3 2.8 5.2 5.8 5.8l1.2-1.7 2 .8v2.1c0 .6-.5 1-1 1A12.3 12.3 0 0 1 6 8.3c0-.6.5-1 1-1H8l.7 2.2Z" fill="currentColor" stroke="none"/></svg>
+            Send on WhatsApp
+          </button>
+          <button type="button" class="btn btn--ghost" id="mail-send">Send by email instead</button>
+        </div>
+        <p class="form-note">Tapping a button opens WhatsApp or your mail app with a ready-written message — just press send. We never store anything you type here.</p>
+        <div class="js-notice" id="js-notice" role="alert"></div>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <a class="brand" href="#top" aria-label="Boronia Arts — back to top">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6c14 0 26 10.5 26 24 0 8.5-6.5 12-13 12h-4c-3.4 0-6 2.6-6 6 0 1.4.5 2.6 1.2 3.7.8 1.2 1.8 2.3 1.8 3.8 0 1.9-1.7 2.5-6 2.5C17.4 58 6 46.6 6 32S18 6 32 6z" fill="#FDF6EC"/><circle cx="22" cy="22" r="4" fill="#EF476F"/><circle cx="36" cy="17" r="4" fill="#FFC43D"/><circle cx="47" cy="26" r="4" fill="#3FA66A"/><circle cx="20" cy="36" r="4" fill="#4D96FF"/></svg>
+          <span class="brand__name">Boronia <b>Arts</b></span>
+        </a>
+        <p class="footer__tag">A happy little drawing &amp; painting studio for children aged 4–14. Small batches, all materials included, and one free trial class.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="#classes">Our classes</a></li>
+          <li><a href="#gallery">Gallery wall</a></li>
+          <li><a href="#schedule">Schedule &amp; fees</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Find us</h4>
+        <ul>
+          <li><a href="#contact">Book a free trial</a></li>
+          <!-- ✏️ EDIT: paste your real Instagram / Facebook page links -->
+          <li><a href="#" >Instagram (add link)</a></li>
+          <li><a href="#" >Facebook (add link)</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span id="year">2026</span> Boronia Arts. All artworks belong to the young artists who made them.</span>
+      <span>Made with a little paint &amp; a lot of patience</span>
+    </div>
+  </div>
+</footer>
+
+<!-- floating WhatsApp bubble (appears once the number is set in the script below) -->
+<a class="wa-float" id="wa-float" href="#" aria-label="Chat with us on WhatsApp" hidden>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z" fill="#fff"/><path d="M8.6 7.6c.7 3.5 3 5.8 6.4 6.4l1.4-1.9 2.3 1v2.3c0 .7-.6 1.2-1.2 1.2A13.7 13.7 0 0 1 6.5 6.4c0-.7.5-1.2 1.2-1.2h2.3l1 2.3Z" fill="#25D366"/></svg>
+</a>
+
+<!-- lightbox for the gallery -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged artwork">
+  <button class="lightbox__close" id="lb-close" aria-label="Close">✕</button>
+  <div class="lightbox__inner"><div id="lb-art"></div><div class="lightbox__cap" id="lb-cap"></div></div>
+</div>
+
+<script>
+/* ============================================================
+   ✏️ SITE SETTINGS — THE ONLY CODE YOU MIGHT EVER TOUCH.
+   Fill in your WhatsApp number and email, and the form buttons
+   and the green chat bubble below will start working.
+============================================================ */
+const SITE = {
+  /* Your WhatsApp number in international format, digits only.
+     e.g. an Indian number 98765 43210 becomes: "919876543210"
+     Leave it as "" until you're ready — the site still works. */
+  whatsappNumber: "",
+
+  /* Your email address, e.g. "hello@boroniaarts.com" */
+  email: "",
+};
+
+/* ---------- everything below runs the page; no edits needed ---------- */
+(function(){
+  "use strict";
+
+  /* mobile menu */
+  const burger = document.querySelector(".nav__burger");
+  const links = document.getElementById("navlinks");
+  burger.addEventListener("click", () => {
+    const open = links.classList.toggle("open");
+    burger.setAttribute("aria-expanded", open);
+  });
+  links.addEventListener("click", e => {
+    if (e.target.tagName === "A") { links.classList.remove("open"); burger.setAttribute("aria-expanded", "false"); }
+  });
+
+  /* highlight the nav link of the section on screen */
+  const sections = [...document.querySelectorAll("main section[id], #classes, #gallery, #about, #schedule, #faq, #contact")];
+  const navAnchors = [...links.querySelectorAll('a[href^="#"]')];
+  const io1 = new IntersectionObserver(es => {
+    es.forEach(en => {
+      if (!en.isIntersecting) return;
+      navAnchors.forEach(a => a.classList.toggle("is-active", a.getAttribute("href") === "#" + en.target.id));
+    });
+  }, { rootMargin: "-45% 0px -50% 0px" });
+  sections.forEach(s => s.id && io1.observe(s));
+
+  /* (scroll-reveal removed — sections are always visible) */
+
+  /* gallery lightbox */
+  const lb = document.getElementById("lightbox");
+  const lbArt = document.getElementById("lb-art");
+  const lbCap = document.getElementById("lb-cap");
+  document.querySelectorAll(".frame").forEach(f => {
+    f.addEventListener("click", () => {
+      lbArt.innerHTML = f.querySelector("svg").outerHTML;
+      lbCap.textContent = f.dataset.cap || "";
+      lb.classList.add("open");
+      document.body.style.overflow = "hidden";
+      document.getElementById("lb-close").focus();
+    });
+  });
+  function closeLb(){ lb.classList.remove("open"); document.body.style.overflow = ""; }
+  lb.addEventListener("click", e => { if (e.target === lb || e.target.id === "lb-close") closeLb(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeLb(); });
+
+  /* form → WhatsApp / email (no server needed) */
+  const form = document.getElementById("enquiry");
+  const notice = document.getElementById("js-notice");
+  function buildMessage(){
+    const d = new FormData(form);
+    const line = (l, v) => v ? l + ": " + v + "\n" : "";
+    let msg = "Hello Boronia Arts! I'd like to book a free trial class.\n\n";
+    msg += line("Child", d.get("child")) + line("Age group", d.get("age"));
+    msg += line("Parent", d.get("parent")) + line("Phone", d.get("phone"));
+    if (d.get("msg")) msg += "Note: " + d.get("msg") + "\n";
+    return msg;
+  }
+  function warn(msg){ notice.textContent = msg; notice.classList.add("show"); }
+  function requireForm(){
+    notice.classList.remove("show");
+    if (!form.reportValidity()) return false;
+    return true;
+  }
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (!requireForm()) return;
+    if (!SITE.whatsappNumber) { warn("WhatsApp isn't set up on this site yet — please call or email us instead."); return; }
+    window.open("https://wa.me/" + SITE.whatsappNumber + "?text=" + encodeURIComponent(buildMessage()), "_blank", "noopener");
+  });
+  document.getElementById("mail-send").addEventListener("click", () => {
+    if (!requireForm()) return;
+    if (!SITE.email) { warn("Email isn't set up on this site yet — please call or WhatsApp us instead."); return; }
+    window.location.href = "mailto:" + SITE.email + "?subject=" + encodeURIComponent("Free trial class enquiry") + "&body=" + encodeURIComponent(buildMessage());
+  });
+
+  /* floating WhatsApp bubble */
+  const waFloat = document.getElementById("wa-float");
+  if (SITE.whatsappNumber) {
+    waFloat.href = "https://wa.me/" + SITE.whatsappNumber + "?text=" + encodeURIComponent("Hi Boronia Arts! I'd like to know more about the art classes.");
+    waFloat.hidden = false;
+  }
+
+  /* current year in the footer */
+  document.getElementById("year").textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
