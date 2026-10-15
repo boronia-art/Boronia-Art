@@ -414,6 +414,12 @@ tbody tr:nth-child(even){ background:var(--paper); }
 .field input:focus, .field select:focus, .field textarea:focus{ outline:3px solid var(--yellow); outline-offset:1px; border-color:var(--ink); }
 .form-actions{ display:flex; flex-wrap:wrap; gap:14px; margin-top:22px; align-items:center; }
 .form-note{ font-size:.85rem; color:var(--ink-60); font-weight:600; }
+.js-success{
+  display:none; margin-top:16px; background:#EDF7EF; border:2px solid var(--green);
+  border-radius:12px; padding:14px 16px; font-size:.94rem; font-weight:700; color:var(--ink);
+}
+.js-success.show{ display:block; }
+.js-success b{ color:var(--green); }
 .js-notice{
   display:none; margin-top:16px; background:#FFF1F3; border:2px solid var(--red);
   border-radius:12px; padding:12px 16px; font-size:.92rem; font-weight:700; color:var(--ink);
@@ -935,7 +941,7 @@ tbody tr:nth-child(even){ background:var(--paper); }
         </div>
         <div class="info-row">
           <svg viewBox="0 0 24 24" fill="none" stroke="#FFC43D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-          <div><b>Email</b><p>[Boronia_Art@Outlook.com]</p></div>
+          <div><b>Email</b><p>[<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dd9fb2afb2b3b4bc829cafa99d92a8a9b1b2b2b6f3beb2b0">[email&#160;protected]</a>]</p></div>
         </div>
         <div class="info-row">
           <svg viewBox="0 0 24 24" fill="none" stroke="#FFC43D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
@@ -967,6 +973,7 @@ tbody tr:nth-child(even){ background:var(--paper); }
         </div>
         <p class="form-note">Tapping a button opens WhatsApp or your mail app with a ready-written message — just press send. We never store anything you type here.</p>
         <div class="js-notice" id="js-notice" role="alert"></div>
+        <div class="js-success" id="js-success" role="status" aria-live="polite"></div>
       </form>
     </div>
   </div>
@@ -1021,7 +1028,7 @@ tbody tr:nth-child(even){ background:var(--paper); }
   <div class="lightbox__inner"><div id="lb-art"></div><div class="lightbox__cap" id="lb-cap"></div></div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ============================================================
    ✏️ SITE SETTINGS — THE ONLY CODE YOU MIGHT EVER TOUCH.
    Fill in your WhatsApp number and email, and the form buttons
@@ -1085,6 +1092,8 @@ const SITE = {
   /* form → WhatsApp / email (no server needed) */
   const form = document.getElementById("enquiry");
   const notice = document.getElementById("js-notice");
+  const successBox = document.getElementById("js-success");
+  function done(txt){ successBox.innerHTML = txt; successBox.classList.add("show"); notice.classList.remove("show"); }
   function buildMessage(){
     const d = new FormData(form);
     const line = (l, v) => v ? l + ": " + v + "\n" : "";
@@ -1097,6 +1106,7 @@ const SITE = {
   function warn(msg){ notice.textContent = msg; notice.classList.add("show"); }
   function requireForm(){
     notice.classList.remove("show");
+    successBox.classList.remove("show");
     if (!form.reportValidity()) return false;
     return true;
   }
@@ -1105,11 +1115,13 @@ const SITE = {
     if (!requireForm()) return;
     if (!SITE.whatsappNumber) { warn("WhatsApp isn't set up on this site yet — please call or email us instead."); return; }
     window.open("https://wa.me/" + SITE.whatsappNumber + "?text=" + encodeURIComponent(buildMessage()), "_blank", "noopener");
+    done("Almost done! <b>WhatsApp just opened</b> with your message ready — press <b>Send</b> there and we\u2019ll take it from there. We usually reply within a day. Thank you!");
   });
   document.getElementById("mail-send").addEventListener("click", () => {
     if (!requireForm()) return;
     if (!SITE.email) { warn("Email isn't set up on this site yet — please call or WhatsApp us instead."); return; }
     window.location.href = "mailto:" + SITE.email + "?subject=" + encodeURIComponent("Free trial class enquiry") + "&body=" + encodeURIComponent(buildMessage());
+    done("Almost done! <b>Your email app just opened</b> with the enquiry ready — press <b>Send</b> there. We usually reply within a day. Thank you!");
   });
 
   /* floating WhatsApp bubble */
@@ -1123,5 +1135,6 @@ const SITE = {
   document.getElementById("year").textContent = new Date().getFullYear();
 })();
 </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920" integrity="sha512-L0ha0OXavK/8okipN9F8BtP84dg9DUhPERbBXzwI6dgTA55d2+yweo3pn5CSFYs45/r8md2+xvUPtTdvTNRfjA==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
